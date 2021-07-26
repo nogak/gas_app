@@ -36,7 +36,10 @@ function setTrigger(){
     const setTime = new Date(year, month, day, hour, minute);
     console.log(setTime);
     // 特定時刻にスクリプトが起動するように設定
-    ScriptApp.newTrigger('main_kintai').timeBased().at(setTime).create();
+    // ScriptApp.newTrigger('main_kintai').timeBased().at(setTime).create();
+
+    // 上の特定時刻での起動がうまく動かなかったためとりあえず。
+    main_kintai();
 }
 
 // 実行済みのトリガーを削除
@@ -114,7 +117,7 @@ function main_kintai(){
     if(slack_msg === "本日の勤務地\n") return;
     console.log(slack_msg);
     sendSlack(slack_msg);
-    deleteTrigger();
+    // deleteTrigger();
 }
 
 function sendSlack(slack_msg){
