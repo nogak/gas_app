@@ -105,7 +105,9 @@ function main_kintai(){
     // console.log(place_list_color)
 
     for(let i=0; i < member_num; i++){
-        place_list[i] = split_string(place_list[i]); // カンマ区切りで午前・午後判定をして文字列変換
+        if(place_list_color[i] == '#0000ff' || place_list_color[i] == '#000000'){ // 赤 or 黒
+            place_list[i] = split_string(place_list[i]); // カンマ区切りで午前・午後判定をして文字列変換
+        }
         place_list[i] = check_color(place_list[i], place_list_color[i]) // カンマ区切りがない場合に先頭の文字色から午前・午後・終日判定をして文字列変換
     }
     
