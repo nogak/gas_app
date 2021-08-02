@@ -1,7 +1,8 @@
 /* 
-勤怠予定表からメンバーの今日の勤務地を取得し、Slackに投げる
+勤怠予定表からメンバーの今日の勤務地を取得し、Slack(#team-infra-eng-chat)に投げる
 ※インストーラブルトリガーでsetTrigger()関数を呼び、スクリプト(main_kintai)の回る時刻を指定
-(インストーラブルトリガーのみだと厳密な時刻指定ができないため)
+(インストーラブルトリガーのみだと厳密な時刻指定ができないため) -> うまく行っていない。。
+// "timeZone": "Etc/GMT-9", // タイムゾーン変更前のメモ（appsscript.json）
 【機能フロー】
     ①シート集合？を開く
     ②シートを選択
@@ -16,32 +17,39 @@
 // main関数(main_kintai)の実行される時刻を指定
 function setTrigger(){
     const today = new Date();
+    console.log(today)
     const year = today.getFullYear();
     const month = today.getMonth();
     const day = today.getDate();
     const youbi = today.getDay();
     
     // 土日の判定
-    if(youbi === 0 || youbi === 6) return;
+    // console.log(today)
+    // console.log(youbi)
+    if(youbi === 0 || youbi === 6){
+        console.log("today is holiday.")
+        return;
+    }
     // 祝日の判定
     const id = 'ja.japanese#holiday@group.v.calendar.google.com'
     const cal = CalendarApp.getCalendarById(id);
     const events = cal.getEventsForDay(today);
-    if(events.length) return;
-
+    if(events.length){
+        console.log("today is holiday")
+        return;
+    }
     // console.log(year, month, day)
     const hour = '9';
     const minute = '00'
     // Dateオブジェクトに変換
     const setTime = new Date(year, month, day, hour, minute);
-    console.log(setTime);
+    // console.log(setTime);
     // 特定時刻にスクリプトが起動するように設定
     // ScriptApp.newTrigger('main_kintai').timeBased().at(setTime).create();
 
-    // 上の特定時刻での起動がうまく動かなかったためとりあえず。
+    // 上の特定時刻設定でうまく動かなかったのでとりあえず
     main_kintai();
 }
-
 // 実行済みのトリガーを削除
 function deleteTrigger(){
     const triggers = ScriptApp.getProjectTriggers();
